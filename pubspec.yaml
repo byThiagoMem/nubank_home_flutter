@@ -1,0 +1,57 @@
+name: nubank_home_flutter
+description: A new Flutter project.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+
+version: 2.0.0
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+## Dependencies
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  flutter_modular: ^3.3.1
+  mobx: ^2.0.4
+  flutter_mobx: ^2.0.2
+  google_fonts: ^2.1.0
+  flutter_launcher_icons: ^0.9.1
+
+## Dev  Dependencies
+dev_dependencies:
+  flutter_modular_test: ^1.0.1
+  flutter_test:
+    sdk: flutter
+  mobx_codegen:
+  build_runner:
+  effective_dart: 
+
+flutter:
+
+  uses-material-design: true
+
+## Assets
+  assets:
+    - assets/images/
+
+## Slidy Scripts 
+
+vars: 
+    clean: flutter clean
+    get: flutter pub get
+    runner: flutter pub run build_runner
+scripts: 
+    mobx: flutter pub run build_runner watch --delete-conflicting-outputs
+    mobx_build: $runner build
+    mobx_watch: $clean & $get & $runner watch
+    mobx_build_clean: $clean & $get & $runner build --delete-conflicting-outputs
+
+## App Icon
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/nubank_icon.png"
+  
