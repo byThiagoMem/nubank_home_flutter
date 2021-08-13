@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import '../../shared/base/area_pix/area_pix.dart';
 
 import '../../shared/themes/app_theme.dart';
 import 'home_store.dart';
@@ -9,7 +11,7 @@ import 'widgets/banners/bottom/list_titles_bottom_banners.dart';
 import 'widgets/banners/top/custom_top_banner.dart';
 import 'widgets/banners/top/list_titles_top_banners.dart';
 import 'widgets/custom_infos/custom_infos.dart';
-import 'widgets/custom_items_carrousel/custom_list_tile.dart';
+import 'widgets/custom_items_carrousel/custom_items_carousel.dart';
 import 'widgets/custom_items_carrousel/list_items.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,154 +25,184 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends ModularState<HomePage, HomeStore> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: AppTheme.colors.darkPurple,
+        statusBarIconBrightness: Brightness.light,
+        systemNavigationBarIconBrightness: Brightness.light));
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomAppBar(),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ListTile(
-                      title:
-                          Text('Conta', style: AppTheme.textStyles.titlesHome),
-                      trailing: Icon(
-                        Icons.keyboard_arrow_right_outlined,
-                        size: 27,
-                        color: AppTheme.colors.black.withOpacity(.5),
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                    SizedBox(height: 2),
-                    Text('R\$ 1.120,98', style: AppTheme.textStyles.values),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                height: 120,
-                child: ListView.builder(
-                  itemBuilder: (_, index) {
-                    return CustomItemsCarrousel(
-                      title: ListItems.titles[index],
-                      image: ListItems.images[index],
-                    );
-                  },
-                  itemCount: ListItems.titles.length,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Container(
-                  height: 55.0,
-                  decoration: BoxDecoration(
-                    color: AppTheme.colors.backgroundIcons,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Future.delayed(Duration(seconds: 1));
+        },
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //AppBar
+                CustomAppBar(),
+                //Menu de Conta/Saldo
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset(
-                        AppTheme.images.card,
-                        height: 38,
+                      ListTile(
+                        title: Text('Conta',
+                            style: AppTheme.textStyles.titlesHome),
+                        trailing: Icon(
+                          Icons.keyboard_arrow_right_outlined,
+                          size: 27,
+                          color: AppTheme.colors.black.withOpacity(.5),
+                        ),
+                        contentPadding: EdgeInsets.zero,
                       ),
-                      Text(
-                        'Meus cartões',
-                        style: AppTheme.textStyles.titlesHomeCards,
-                      ),
+                      SizedBox(height: 2),
+                      Text('R\$ 1.120,98', style: AppTheme.textStyles.values),
                     ],
                   ),
                 ),
-              ),
-              Container(
-                height: 80,
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: ListView.builder(
-                  itemBuilder: (_, index) {
-                    return CustomTopBanner(
-                      title: ListTitlesTopBanners.titles[index],
-                      titleFeatured: ListTitlesTopBanners.titleFeatured[index],
-                    );
-                  },
-                  itemCount: ListTitlesTopBanners.titles.length,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 12),
+                //Menu Carousel
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  height: 120,
+                  child: ListView.builder(
+                    itemBuilder: (_, index) {
+                      return Row(
+                        children: [
+                          CustomItemsCarrousel(
+                            title: ListItems.titles[index],
+                            image: ListItems.images[index],
+                            onTap: () {
+                              if (index == 0) {
+                                AreaPix.showBottomSheet(context: context);
+                              }
+                            },
+                          ),
+                          SizedBox(width: 10),
+                        ],
+                      );
+                    },
+                    itemCount: ListItems.titles.length,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                  ),
                 ),
-              ),
-              Divider(),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: CustomInfos(
-                  icon: AppTheme.images.card,
-                  title: 'Cartão de crédito',
-                  subtitle: 'Fatura atual',
-                  invoice: 'R\$ 616,08',
-                  valueLoan: 'Limite disponível de R\$ 6.167,00',
+                //Card Meus Cartões
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Container(
+                    height: 55.0,
+                    decoration: BoxDecoration(
+                      color: AppTheme.colors.backgroundIcons,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          AppTheme.images.card,
+                          height: 38,
+                        ),
+                        Text(
+                          'Meus cartões',
+                          style: AppTheme.textStyles.titlesHomeCards,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-              Divider(),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: CustomInfos(
-                  icon: AppTheme.images.loan,
-                  title: 'Empréstimo',
-                  subtitle: 'Valor disponível até',
-                  invoice: '',
-                  valueLoan: 'R\$ 25.000,00',
+                //Carousel Cards
+                Container(
+                  height: 80,
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  child: ListView.builder(
+                    itemBuilder: (_, index) {
+                      return CustomTopBanner(
+                        title: ListTitlesTopBanners.titles[index],
+                        titleFeatured:
+                            ListTitlesTopBanners.titleFeatured[index],
+                      );
+                    },
+                    itemCount: ListTitlesTopBanners.titles.length,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                  ),
                 ),
-              ),
-              Divider(),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: CustomInfos(
-                  icon: AppTheme.images.favorite,
-                  title: 'Seguro de vida',
-                  subtitle:
-                      'Conheça Nubank Vida: um seguro simples que cabe no bolso.',
-                  invoice: '',
-                  valueLoan: '',
+                Divider(),
+                //Menu de informação de Cartão de crédito
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: CustomInfos(
+                    icon: AppTheme.images.card,
+                    title: 'Cartão de crédito',
+                    subtitle: 'Fatura atual',
+                    invoice: 'R\$ 616,08',
+                    valueLoan: 'Limite disponível de R\$ 6.167,00',
+                  ),
                 ),
-              ),
-              Divider(),
-              Padding(
-                padding: const EdgeInsets.only(left: 20, top: 10, bottom: 30),
-                child: Text(
-                  'Descubra mais',
-                  style: AppTheme.textStyles.titlesHome.copyWith(fontSize: 17),
+                Divider(),
+                //Menu de informação de Emprestimo
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: CustomInfos(
+                    icon: AppTheme.images.loan,
+                    title: 'Empréstimo',
+                    subtitle: 'Valor disponível até',
+                    invoice: '',
+                    valueLoan: 'R\$ 25.000,00',
+                  ),
                 ),
-              ),
-              Container(
-                height: 170,
-                child: ListView.builder(
-                  itemBuilder: (_, index) {
-                    return CustomBottomBanner(
-                      title: ListTitlesBottomBanners.titles[index],
-                      subtitle: ListTitlesBottomBanners.subtitles[index],
-                      titleButton: ListTitlesBottomBanners.titlesButton[index],
-                      isNew: index == 0 ? true : false,
-                    );
-                  },
-                  itemCount: ListTitlesBottomBanners.titles.length,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 12),
+                Divider(),
+                //Menu de informação de Seguro de vida
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: CustomInfos(
+                    icon: AppTheme.images.favorite,
+                    title: 'Seguro de vida',
+                    subtitle:
+                        'Conheça Nubank Vida: um seguro simples que cabe no bolso.',
+                    invoice: '',
+                    valueLoan: '',
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-            ],
+                Divider(),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, top: 10, bottom: 30),
+                  child: Text(
+                    'Descubra mais',
+                    style:
+                        AppTheme.textStyles.titlesHome.copyWith(fontSize: 17),
+                  ),
+                ),
+                Container(
+                  height: 170,
+                  child: ListView.builder(
+                    itemBuilder: (_, index) {
+                      return CustomBottomBanner(
+                        title: ListTitlesBottomBanners.titles[index],
+                        subtitle: ListTitlesBottomBanners.subtitles[index],
+                        titleButton:
+                            ListTitlesBottomBanners.titlesButton[index],
+                        isNew: index == 0 ? true : false,
+                      );
+                    },
+                    itemCount: ListTitlesBottomBanners.titles.length,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                  ),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+              ],
+            ),
           ),
         ),
       ),

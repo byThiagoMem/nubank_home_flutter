@@ -19,7 +19,7 @@ class CustomBottomBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 260,
+      width: 270,
       margin: EdgeInsets.only(right: 8, left: 8),
       decoration: BoxDecoration(
         color: AppTheme.colors.backgroundIcons,
@@ -56,15 +56,17 @@ class CustomBottomBanner extends StatelessWidget {
             ),
             Text(
               subtitle,
-              style: AppTheme.textStyles.subtitlesHomeCardsBottom,
+              style: AppTheme.textStyles.subtitlesHomeCardsBottom
+                  .copyWith(fontSize: 13),
             ),
             OutlinedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
                 primary: AppTheme.colors.darkPurple,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                    side: BorderSide(color: Colors.red)),
+                  borderRadius: BorderRadius.circular(18.0),
+                  side: BorderSide(color: Colors.red),
+                ),
               ),
               child: Text(
                 titleButton,

@@ -34,10 +34,10 @@ class AppTextStylesDefault implements AppTextStyles {
       fontWeight: FontWeight.w600);
 
   @override
-  TextStyle get values => GoogleFonts.nunito(
-      fontSize: 21.0,
+  TextStyle get values => GoogleFonts.poppins(
+      fontSize: 22.0,
       color: AppTheme.colors.black,
-      fontWeight: FontWeight.w700);
+      fontWeight: FontWeight.w500);
 
   @override
   TextStyle get titlesHomeBanners => GoogleFonts.lato(
@@ -68,9 +68,9 @@ class AppTextStylesDefault implements AppTextStyles {
       letterSpacing: .5);
 
   @override
-  TextStyle get subtitlesHomeCardsBottom => GoogleFonts.nunito(
-      fontSize: 13,
-      color: AppTheme.colors.black,
-      fontWeight: FontWeight.w500,
-      letterSpacing: .2);
+  TextStyle get subtitlesHomeCardsBottom => GoogleFonts.poppins(
+      fontSize: 14.0,
+      color: AppTheme.colors.black.withOpacity(.7),
+      fontWeight: FontWeight.w400,
+      letterSpacing: .4);
 }
